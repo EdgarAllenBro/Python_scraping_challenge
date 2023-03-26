@@ -10,25 +10,12 @@ with open('./book.csv', 'w', newline='') as csvFile: #open csv file
         page = requests.get('http://books.toscrape.com/catalogue/category/books_1/page-{}.html'.format(i))
         content = html.fromstring(page.content)
 
-        #create a class for book objects to store each set of data
-        class Book:
-            def __init__(self,title,price,avail):
-                self.title = title
-                self.price = price
-                self.avail = avail
-        shelf = []
-
         #use xpath to grab the title price and availability from html
         titles = content.xpath("//h3/a/@title")
         prices = content.xpath("//p[@class='price_color']/text()")
         avail = content.xpath("//div[@class='product_price']/p[last()]/@class")
 
-
-        #loop through title price and avail lists to create my book objects
-        for i in range(len(titles)):
-            newBook = Book(titles[i],prices[i],avail[i])
-            shelf.append(newBook)
-        #write each object as a row in the csv file
+        #then loop thropugh these lists creating a row for each set of data.
         for i in range(len(titles)):
             writer.writerow([titles[i],prices[i],avail[i]])
 
